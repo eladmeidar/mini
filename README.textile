@@ -1,0 +1,14 @@
+a ruby eventmachine bot inspired by richard jones' irccat. also logs channels. history and webhooks via sinatra. 
+
+# usage
+
+launch like this. note - leave the # off the channel names. you can add many channel names, main one is first. 
+
+  ruby script/mini.rb irc.freenode.net 6667 my_bot_name my_bot_nickserv_passwd my_bot_channel
+  
+now send some data down the pipes!
+
+  echo "Ilovethistuffs yes .. i .. do. " | nc localhost 12345
+  vmstat | nc localhost 12345
+  echo "#musicteam,#legal,@alice New album uploaded: ..." | nc somemachine 12345
+  tail -f /var/log/important.log | nc somemachine 12345

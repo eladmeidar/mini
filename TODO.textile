@@ -1,0 +1,5 @@
+* add buffering to avoid flooding
+* add !commands
+* only respond to ppl on main chan
+* add sinatra
+* add datamapper
