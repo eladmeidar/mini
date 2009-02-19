@@ -1,6 +1,6 @@
-a ruby eventmachine bot inspired by richard jones' irccat. also logs channels. history and webhooks via sinatra. 
+# a ruby eventmachine bot inspired by richard jones' irccat. also logs channels. history and webhooks via sinatra. 
 
-# usage
+## usage
 
 launch like this. note - leave the # off the channel names. you can add many channel names, main one is first. 
 
@@ -12,3 +12,5 @@ now send some data down the pipes!
   vmstat | nc localhost 12345
   echo "#musicteam,#legal,@alice New album uploaded: ..." | nc somemachine 12345
   tail -f /var/log/important.log | nc somemachine 12345
+  
+run stuff by typing ?command in the main mini channel or by dmsging mini bot. this will invoke miniminimini.rb with the command as an arg. place miniminimini.rb on your $PATH. 

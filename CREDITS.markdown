@@ -1,2 +1,2 @@
-- thanks to yakischloba and careo on #eventmachine (freenode)
+- thanks to yakischloba and careo on #eventmachine
 - thanks to masuidrive (http://blog.masuidrive.jp/) for a helpful gist which i can't find anymore. it showed me how to write an irc client using eventmachine.

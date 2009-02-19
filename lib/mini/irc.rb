@@ -3,9 +3,8 @@
 #
 module Mini
   class IRC < EventMachine::Connection
-    
     include EventMachine::Protocols::LineText2
-    cattr_accessor *(@@config = [:user, :password, :server, :port, :channels])
+    cattr_accessor *((@@config = [:user, :password, :server, :port, :channels]) + [:moderators])
     
     def say(msg, targets = [])
       targets = ['#' + IRC.channels.first] if targets.blank?
@@ -19,19 +18,25 @@ module Mini
     end
         
     def execute(sender, receiver, msg)
-      (@queue ||= []) << [sender, receiver, msg]
+      (@queue ||= []) << [sender.split("!").first, msg]
       command "NAMES", "#" + IRC.channels.first
     end
 
-    def self.connect(options)
-      @@config.each { |param| IRC.send("#{ param }=", options[param]) }
-      EM.connect(IRC.server, IRC.port, self, options)
+    def unwind(nicks)
+      IRC.moderators = nicks.split.map { |nick| nick.delete("@").delete("+") }
+      
+      while job = (@queue ||= []).pop
+        sender, bang = job
+        say(%x{ #{ ruby -S miniminimini.rb bang[1..-1] } }) if IRC.moderators.include?(sender)
+      end
     end
     
-    #
-    #  Callbacks
-    #
+    def self.connect(options)
+      @@config.each { |param| IRC.send("#{ param }=", options[param]) }
+      EM.connect(IRC.server, IRC.port.to_i, self, options)
+    end
     
+    # callbacks
     def post_init
       command "USER", [IRC.user]*4
       command "NICK", IRC.user
@@ -42,8 +47,8 @@ module Mini
     def receive_line(line)
       case line
       when /^PING (.*)/ : command('PONG', $1)
-      when /^:(\S+) PRIVMSG (.*) :\!(.*)$/ : execute($1, $2, $3)
-      when /^:NAMES / : unwind(nicks)
+      when /^:(\S+) PRIVMSG (.*) :\?(.*)$/ : execute($1, $2, $3)
+      when /^:\S* \d* #{ IRC.user } @ #{ '#' + IRC.channels.first } :(.*)/ : unwind($1)
       else puts line; end
     end
     
@@ -55,6 +60,3 @@ module Mini
     end
   end
 end
-
-__END__
-:hubbard.freenode.net 353 dslkfjlds @ #eventmachine :+dslkfjlds +joseferr +yakischloba +rsimon +alloy +Aria +mchung +dj2 +takiuchi_ +elven +elliottcable @raggi +tmm1 +igrigorik +manveru +SuttoL @ChanServ +wyhaines +garbagecat 
