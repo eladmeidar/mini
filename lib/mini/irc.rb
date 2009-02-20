@@ -26,8 +26,8 @@ module Mini
       IRC.moderators = nicks.split.map { |nick| nick.delete("@").delete("+") }
       
       while job = (@queue ||= []).pop
-        sender, bang = job
-        say(%x{ #{ ruby -S miniminimini.rb bang[1..-1] } }) if IRC.moderators.include?(sender)
+        sender, cmd = job
+        say(%x{ miniminimini #{ cmd } }) if IRC.moderators.include?(sender)
       end
     end
     

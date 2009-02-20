@@ -2,7 +2,7 @@ module Mini
   module Listener
     mattr_accessor :connection
     
-    # echo "#musicteam,#legal,@alice New album uploaded: ..." | nc -q0 somemachine 12345.
+    # echo "#musicteam,#legal,@alice New album uploaded: ..." | nc somemachine 12345.
     def receive_data(data)
       all, targets, *payload = *data.match(/^(([\#@]\S+,? ?)*)(.*)$/)
       targets = targets.split(",").map { |target| target.strip }.uniq
