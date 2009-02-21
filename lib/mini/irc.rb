@@ -1,13 +1,22 @@
+require 'ostruct'
+
 #
 #  Connect to and handle IRC. 
 #
 module Mini
   class IRC < EventMachine::Connection
     include EventMachine::Protocols::LineText2
-    cattr_accessor *((@@config = [:user, :password, :server, :port, :channels]) + [:moderators])
     
+    attr_accessor :config, :moderators
+    cattr_accessor :connection
+    
+    def initialize(options)
+      self.config = OpenStruct.new(options)
+      @queue = []
+    end
+        
     def say(msg, targets = [])
-      targets = ['#' + IRC.channels.first] if targets.blank?
+      targets = ['#' + config.channels.first] if targets.blank?
       msg.split("\n").each do |msg| 
         targets.each { |target| command "PRIVMSG #{ target.delete("@") } :#{ msg }" }
       end
@@ -18,43 +27,42 @@ module Mini
     end
         
     def execute(sender, receiver, msg)
-      (@queue ||= []) << [sender.split("!").first, msg]
-      command "NAMES", "#" + IRC.channels.first
+      @queue << [sender.split("!").first, msg]
+      command "NAMES", "#" + config.channels.first
     end
 
     def unwind(nicks)
-      IRC.moderators = nicks.split.map { |nick| nick.delete("@").delete("+") }
+      self.moderators = nicks.split.map { |nick| nick.delete("@").delete("+") }
       
-      while job = (@queue ||= []).pop
+      while job = @queue.pop
         sender, cmd = job
-        say(%x{ miniminimini #{ cmd } }) if IRC.moderators.include?(sender)
+        say(%x{ miniminimini #{ cmd } }) if self.moderators.include?(sender)
       end
     end
     
     def self.connect(options)
-      @@config.each { |param| IRC.send("#{ param }=", options[param]) }
-      EM.connect(IRC.server, IRC.port.to_i, self, options)
+      self.connection = EM.connect(options[:server], (options[:port] || "6667").to_i, self, options)
     end
     
     # callbacks
     def post_init
-      command "USER", [IRC.user]*4
-      command "NICK", IRC.user
-      command("NickServ IDENTIFY", IRC.user, IRC.password) if IRC.password
-      IRC.channels.each { |channel| command("JOIN", "##{ channel }")  } if IRC.channels
+      command "USER", [config.user]*4
+      command "NICK", config.user
+      command("NickServ IDENTIFY", config.user, config.password) if config.password
+      config.channels.each { |channel| command("JOIN", "##{ channel }")  } if config.channels
     end
     
     def receive_line(line)
       case line
       when /^PING (.*)/ : command('PONG', $1)
       when /^:(\S+) PRIVMSG (.*) :\?(.*)$/ : execute($1, $2, $3)
-      when /^:\S* \d* #{ IRC.user } @ #{ '#' + IRC.channels.first } :(.*)/ : unwind($1)
+      when /^:\S* \d* #{ config.user } @ #{ '#' + config.channels.first } :(.*)/ : unwind($1)
       else puts line; end
     end
     
     def unbind
       EM.add_timer(3) do
-        reconnect(IRC.server, IRC.port)
+        reconnect(config.server, config.port)
         post_init
       end
     end

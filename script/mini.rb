@@ -4,13 +4,12 @@ abort("script/mini.rb <server> <port> <user> <password> <main channel> <channel2
 server, port, user, password, *channels = ARGV
 
 EventMachine::run do
-  @irc = Mini::IRC.connect \
+  Mini::IRC.connect \
     :server => server, 
     :port => port, 
     :user => user,
     :password => password, 
     :channels => [channels].flatten
-
-  Mini::Listener.connection = @irc
-  EventMachine::start_server("0.0.0.0", 12345, Mini::Listener) 
+    
+  EventMachine::start_server("0.0.0.0", ENV['MINI_PORT'] || 12345, Mini::Listener) 
 end
