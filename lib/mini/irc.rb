@@ -1,5 +1,3 @@
-require 'ostruct'
-
 #
 #  Connect to and handle IRC. 
 #
@@ -18,7 +16,9 @@ module Mini
     def say(msg, targets = [])
       targets = ['#' + config.channels.first] if targets.blank?
       msg.split("\n").each do |msg| 
-        targets.each { |target| command "PRIVMSG #{ target.delete("@") } :#{ msg }" }
+        targets.each do |target| 
+          command (msg.starts_with?("/") ? msg[1..-1] : "PRIVMSG #{ target.delete("@") } :#{ msg }")
+        end
       end
     end
     
@@ -26,18 +26,22 @@ module Mini
       send_data "#{ cmd.flatten.join(' ') }\r\n"
     end
         
-    def execute(sender, receiver, msg)
+    def queue(sender, receiver, msg)
       @queue << [sender.split("!").first, msg]
       command "NAMES", "#" + config.channels.first
     end
 
-    def unwind(nicks)
+    def dequeue(nicks)
       self.moderators = nicks.split.map { |nick| nick.delete("@").delete("+") }
       
       while job = @queue.pop
         sender, cmd = job
-        say(%x{ miniminimini #{ cmd } }) if self.moderators.include?(sender)
+         execute(cmd) if self.moderators.include?(sender)
       end
+    end
+    
+    def execute(cmd)
+      say(%x{ miniminimini #{ cmd } })
     end
     
     def self.connect(options)
@@ -55,8 +59,8 @@ module Mini
     def receive_line(line)
       case line
       when /^PING (.*)/ : command('PONG', $1)
-      when /^:(\S+) PRIVMSG (.*) :\?(.*)$/ : execute($1, $2, $3)
-      when /^:\S* \d* #{ config.user } @ #{ '#' + config.channels.first } :(.*)/ : unwind($1)
+      when /^:(\S+) PRIVMSG (.*) :\?(.*)$/ : queue($1, $2, $3)
+      when /^:\S* \d* #{ config.user } @ #{ '#' + config.channels.first } :(.*)/ : dequeue($1)
       else puts line; end
     end
     
