@@ -1,4 +1,9 @@
 #!/usr/local/bin/ruby
 
+# FIXME: REMOVE
+require File.dirname(__FILE__) + '/../lib/mini'
+Mini::Bot.commands["echo"] = lambda { |*args| puts args }
+# FIXME: REMOVE
+
 command, *args = ARGV
-puts Mini::Bot.run(command, args)
+Mini::Bot.run(command, args)

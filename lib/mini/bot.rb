@@ -8,7 +8,7 @@ module Mini
     
     def self.run(command, args)
       proc = Bot.commands[command]
-      proc.call(args) if proc
+      proc ? proc.call(args) : (puts "command #{ command } not found. ")
     end
   end
 end

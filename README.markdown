@@ -40,9 +40,9 @@ you have to be on the control channel for the script to execute. this is the fir
 
 ### via web
 
-post to hostname:MINI_WEB_PORT/MINI_SECRET/command. ie: 
+post to `hostname:MINI_WEB_PORT/command/MINI_SECRET`. ie: 
 
-    curl -dtext="netcat, lolcats, pigs, sweaty snout, nixon!" http://test.com:2345/dscds789svjskdlvsdz789mkvcjvklsd6/echo
+    curl -dtext="netcat, lolcats, pigs, sweaty snout, nixon!" http://test.com:2345/echo/dscds789svjskdlvsdz789mkvcjvklsd6
     
 of course normally, you'd proxy to startup.com:2345 from somthing sitting behind :80. Set the ENV variables before starting mini. 
 
@@ -50,12 +50,12 @@ of course normally, you'd proxy to startup.com:2345 from somthing sitting behind
 
 you can create commands simply by providing your own miniminimini script. ARGV.first ist the command, the rest is arguments. mini comes bundled with a ruby based miniminimini script which you can extend by adding procs like this: 
 
-      Mini::Web.commands[:echo] = lambda { |*args| puts args }
+      Mini::Bot.commands["echo"] = lambda { |*args| puts args }
 
 ## configuration
 
 the following environment variables can be used to configure mini. 
 
-* `MINI_SECRET`: a secret key for the web server, ie /kvds78ovdsjhvksd7ckjlds7cvds879bskdl/git_commit
+* `MINI_SECRET`: a secret key for the web server, ie /git_commit/kvds78ovdsjhvksd7ckjlds7cvds879bskdl
 * `MINI_CAT_PORT`: port for clients using netcat. 
 * `MINI_WEB_PORT`: port on which the web server is started. 
