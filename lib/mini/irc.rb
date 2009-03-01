@@ -17,7 +17,7 @@ module Mini
       targets = ['#' + config.channels.first] if targets.blank?
       msg.split("\n").each do |msg| 
         targets.each do |target| 
-          command (msg.starts_with?("/") ? msg[1..-1] : "PRIVMSG #{ target.delete("@") } :#{ msg }")
+          command( (msg.starts_with?("/") ? msg[1..-1] : "PRIVMSG #{ target.delete("@") } :#{ msg }") )
         end
       end
     end

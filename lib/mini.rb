@@ -1,10 +1,2 @@
-require 'rubygems'
-require 'eventmachine'
-require 'activesupport'
-require 'ostruct'
-require 'json'
-require 'sinatra'
-
-require File.dirname(__FILE__) + '/mini/listener'
-require File.dirname(__FILE__) + '/mini/irc'
-require File.dirname(__FILE__) + '/mini/web'
+%w{ rubygems eventmachine activesupport ostruct json sinatra }.each { |lib| require lib }
+%w{ listener irc web bot }.each { |lib| require File.dirname(__FILE__) + "/mini/#{ lib }" }
