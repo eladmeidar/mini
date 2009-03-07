@@ -1,5 +1,6 @@
 @@web = Sinatra.new do
-  get("/:command/:secret") do
-    Mini::IRC.connection.execute([params[:command], params.to_yaml].join(" ")) if params[:secret] == ENV['MINI_SECRET']
+  post("/:command/:secret") do
+    command, secret = params.delete("command"), params.delete("secret")
+    Mini::IRC.connection.execute([command, params].join(" ")) if @@secret
   end
 end

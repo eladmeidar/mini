@@ -1,0 +1,9 @@
+require 'erb'
+
+abort("mini create <directory>") unless ARGV.first == "create" && dir = Dir[ARGV.last].first
+
+target = dir.chomp('/') + '/minictl'
+File.open(target, 'w') { |f| f.write(ERB.new(IO.read(File.dirname(__FILE__) + '/../scripts/minictl.erb')).result) }
+%x{ chmod +x #{ target } }
+
+puts "generated minictl into #{ dir }. edit, then start mini with `ruby minictl` in there."

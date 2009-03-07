@@ -1,2 +1,2 @@
-- thanks to yakischloba and careo on #eventmachine
-- thanks to masuidrive (http://blog.masuidrive.jp/) for a helpful gist which i can't find anymore. it demonstrated irc+eventmachine.
+- thx 2 yakischloba and careo #eventmachine
+- thx 2 http://blog.masuidrive.jp/ for a irc+eventmachine gist.

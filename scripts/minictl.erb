@@ -1,0 +1,28 @@
+#!<%= %x{ which ruby } %>
+require 'rubygems'
+require 'mini'
+
+#
+#  require any plugins you want to load into the default minicmd:
+#     require 'mini_my_plugin'
+#
+#  or write some commands straight into here, like...
+#
+Mini::Bot.commands["echo"] = lambda { |*args| puts args }
+
+abort("minictl <server> <port> <user> <password> <main channel> <channel2>. no hashes 4 chans pls. ") unless ARGV.length >= 4
+server, port, user, password, *channels = ARGV
+
+#
+#  Change defaults as needed here. 
+#
+
+Mini::Bot.start \
+  :secret => '<%= (0...40).map{ 65.+(rand(25)).chr }.join %>', # randomly generated for you. 
+  :mini_port => 12345,
+  :web_port => 2345,
+  :server => server,
+  :port => port,
+  :user => user,
+  :password => password, 
+  :channels => [*channels]

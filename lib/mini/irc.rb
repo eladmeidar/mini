@@ -1,6 +1,3 @@
-#
-#  Connect to and handle IRC. 
-#
 module Mini
   class IRC < EventMachine::Connection
     include EventMachine::Protocols::LineText2
@@ -36,12 +33,13 @@ module Mini
       
       while job = @queue.pop
         sender, cmd = job
-         execute(cmd) if self.moderators.include?(sender)
+        execute(cmd) if self.moderators.include?(sender)
       end
     end
     
     def execute(cmd)
-      say(%x{ miniminimini #{ cmd } })
+      command = "minicmd #{ [*cmd].join(' ') }"
+      say(%x{#{ command }})
     end
     
     def self.connect(options)

@@ -42,17 +42,21 @@ you have to be on the control channel for the script to execute. this is the fir
 
 post to `hostname:MINI_WEB_PORT/command/MINI_SECRET`. ie: 
 
-    curl -dtext="netcat, lolcats, pigs, sweaty snout, nixon!" http://test.com:2345/echo/dscds789svjskdlvsdz789mkvcjvklsd6
+    curl -d "netcat, lolcats, pigs, sweaty snout, nixon" http://localhost:2345/echo/dscds789svjskdlvsdz789mkvcjvklsd6
     
-of course normally, you'd proxy to startup.com:2345 from somthing sitting behind :80. Set the ENV variables before starting mini. 
-
-## commands
-
-you can create commands simply by providing your own miniminimini script. ARGV.first ist the command, the rest is arguments. mini comes bundled with a ruby based miniminimini script which you can extend by adding procs like this: 
-
-      Mini::Bot.commands["echo"] = lambda { |*args| puts args }
+of course normally, you'd proxy to startup.com:2345 from something sitting behind :80. Set the ENV variables before starting mini. 
 
 ## configuration
+
+### commands
+
+you can create commands simply by providing your own miniminimini script. ARGV.first is the command, the rest is arguments. mini comes bundled with a ruby based miniminimini script which you can extend by adding procs to ~/miniconfig.rb: 
+
+      Mini::Bot.commands["echo"] = lambda { |*args| puts args }
+      
+just write that straight into ~/miniconfig.rb.
+
+### environment
 
 the following environment variables can be used to configure mini. 
 
