@@ -4,6 +4,12 @@
 
     sudo gem install purzelrakete-mini --source=http://gems.github.com
     
+create a directory for mini and run the following
+
+    minigen create <your-mini-dir>
+    
+this creates two files in your mini dir. edit both as you see fit, then add your mini dir to your $PATH inside of your shell's rc file. 
+
 ## usage
 
 launch: (leave the # off the channel names. you can add many channel names, main one is first)
@@ -29,12 +35,7 @@ to send IRC commands from the bot, prepend '/':
 
 ### via irc  
 
-run stuff by typing ?command in the main mini channel or by dmsging mini bot. this will invoke a script called miniminimini with the command as an arg. there's a default script bundled as an executable in the gem. if you want to use your own, just make sure you place it before the bundled one in your $PATH. here's an example:
-
-    #!/usr/local/bin/ruby
-    puts "called miniminimini with #{ ARGV.inspect }"
-
-don't forget to chmod +x and replace the bang as appropriate. 
+run stuff by typing ?command in the main mini channel or by dmsging mini bot. this will invoke minicmd (in your mini dir) with the command as an arg. if you want the script to run a different language (ie php), just change the bang and replace with your own stuff. 
 
 you have to be on the control channel for the script to execute. this is the first channel in your list. 
 
@@ -44,22 +45,20 @@ post to `hostname:MINI_WEB_PORT/command/MINI_SECRET`. ie:
 
     curl -d "netcat, lolcats, pigs, sweaty snout, nixon" http://localhost:2345/echo/dscds789svjskdlvsdz789mkvcjvklsd6
     
-of course normally, you'd proxy to startup.com:2345 from something sitting behind :80. Set the ENV variables before starting mini. 
+of course normally, you'd proxy to startup.com:2345 from something sitting behind :80. Set up ports in minictl in your mini dir. 
+
+you can find `MINI_SECRET` and `MINI_WEB_PORT` inside of the minictl file in your mini directory. 
 
 ## configuration
 
 ### commands
 
-you can create commands simply by providing your own miniminimini script. ARGV.first is the command, the rest is arguments. mini comes bundled with a ruby based miniminimini script which you can extend by adding procs to ~/miniconfig.rb: 
+you can create commands simply by providing your own  minicmd script. ARGV.first is the command, the rest is arguments. mini comes bundled with a ruby based minicmd script which you can extend by adding procs to it:
 
       Mini::Bot.commands["echo"] = lambda { |*args| puts args }
       
-just write that straight into ~/miniconfig.rb.
+you can also require any mini plugins in there. 
 
-### environment
+### web callbacks
 
-the following environment variables can be used to configure mini. 
-
-* `MINI_SECRET`: a secret key for the web server, ie /git_commit/kvds78ovdsjhvksd7ckjlds7cvds879bskdl
-* `MINI_CAT_PORT`: port for clients using netcat. 
-* `MINI_WEB_PORT`: port on which the web server is started. 
+there is a secret key (see above) wich you can configure inside of minicmd (inside of your mini dir).

@@ -8,7 +8,7 @@ require 'mini'
 #
 #  or write some commands straight into here, like...
 #
-Mini::Bot.commands["echo"] = lambda { |*args| puts args }
+Mini::Bot.commands["echo"] = lambda { |*args| puts args.join(" ") }
 
 command, *args = ARGV
 Mini::Bot.run(command, args)
