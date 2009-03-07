@@ -1,0 +1,14 @@
+#!<%= %x{ which ruby } %>
+require 'rubygems'
+require 'mini'
+
+#
+#  require any plugins you want to load into the default minicmd:
+#     require 'mini_my_plugin'
+#
+#  or write some commands straight into here, like...
+#
+Mini::Bot.commands["echo"] = lambda { |*args| puts args }
+
+command, *args = ARGV
+Mini::Bot.run(command, args)

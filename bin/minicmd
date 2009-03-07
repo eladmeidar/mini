@@ -1,2 +1,0 @@
-command, *args = ARGV
-Mini::Bot.run(command, args)

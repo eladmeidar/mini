@@ -43,7 +43,7 @@ module Mini
     end
     
     def self.connect(options)
-      self.connection = EM.connect(options[:server], (options[:port] || "6667").to_i, self, options)
+      self.connection = EM.connect(options[:server], options[:port].to_i, self, options)
     end
     
     # callbacks

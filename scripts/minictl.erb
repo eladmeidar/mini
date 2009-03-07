@@ -2,14 +2,6 @@
 require 'rubygems'
 require 'mini'
 
-#
-#  require any plugins you want to load into the default minicmd:
-#     require 'mini_my_plugin'
-#
-#  or write some commands straight into here, like...
-#
-Mini::Bot.commands["echo"] = lambda { |*args| puts args }
-
 abort("minictl <server> <port> <user> <password> <main channel> <channel2>. no hashes 4 chans pls. ") unless ARGV.length >= 4
 server, port, user, password, *channels = ARGV
 

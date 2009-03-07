@@ -6,9 +6,9 @@ module Mini
     def self.start(options)
       EventMachine::run do
         Mini::IRC.connect(options)
-        EventMachine::start_server("0.0.0.0", options[:mini_port], Mini::Listener)
+        EventMachine::start_server("0.0.0.0", options[:mini_port].to_i, Mini::Listener)
         @@secret = options[:secret]  
-        @@web.run! :port => options[:web_port]
+        @@web.run! :port => options[:web_port].to_i
       end
     end
     
